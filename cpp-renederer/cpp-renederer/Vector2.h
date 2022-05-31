@@ -12,6 +12,10 @@ public:
 		x = 0;
 		y = 0;
 	}
+	Vector2(T a) {
+		x = a;
+		y = a;
+	}
 	Vector2(T a, T b)
 	{
 		x = a;
