@@ -15,4 +15,19 @@ int main()
 	}
 
 	bmp.Export("test.bmp");
+
+
+
+	Obraz kopia(200,200);
+
+	kopia.Import("test.bmp");
+
+	for (int y = 0; y < kopia.height; y++) {
+		for (int x = 0; x < kopia.width; x++) {
+			if (kopia.GetKolor(x,y).r==0) {
+				kopia.SetKolor(Pixel(50, 200, 30), x, y);
+			}
+		}
+	}
+	kopia.Export("kopia.bmp");
 }

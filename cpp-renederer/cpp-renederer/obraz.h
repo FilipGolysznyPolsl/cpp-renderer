@@ -22,8 +22,8 @@ public:
 	void SetKolor(const Pixel& kolor, int x, int y);
 
 	void Export(const char* path);
+	void Import(const char* path);
 
-private:
 	int height;
 	int width;
 	vector<Pixel> v_pixel;

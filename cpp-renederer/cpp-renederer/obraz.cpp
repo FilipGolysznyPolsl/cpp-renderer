@@ -137,6 +137,53 @@ void Obraz::Export(const char* path)
 		file.write(reinterpret_cast<char*>(padding), paddingL);
 	}
 	file.close();
-	cout << "Utworzono BMP!";
+	cout << "Utworzono BMP!\n";
+}
+
+void Obraz::Import(const char* path)
+{
+	ifstream file;
+	file.open(path, ios::in | ios::binary);
+	if (!file.is_open()) {
+		cout << "Nie ma takiego pliku\n";
+		return;
+	}
+
+	const int HeaderL = 14;
+	const int InfHeadL = 40;
+
+	unsigned char Header[HeaderL];
+	file.read(reinterpret_cast<char*>(Header), HeaderL);
+	if (!(Header[0] == 'B' && Header[1] == 'M')) {
+		cout << "To nie plik BMP!\n";
+		return;
+	}
+	unsigned char InfHead[InfHeadL];
+	file.read(reinterpret_cast<char*>(InfHead), InfHeadL);
+
+	int ContentL = Header[2] + (Header[3] << 8) + (Header[4] << 16) + (Header[5] << 24);
+	width = InfHead[4] + (InfHead[5] << 8) + (InfHead[6] << 16) + (InfHead[7] << 24);
+	height = InfHead[8] + (InfHead[9] << 8) + (InfHead[10] << 16) + (InfHead[11] << 24);
+
+	v_pixel.resize(width * height);
+
+	const int paddingL = ((4 - (width * 3) % 4) % 4);
+
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			unsigned char color[3];
+			file.read(reinterpret_cast<char*>(color), 3);
+			
+
+
+			v_pixel[y * width + x].r = static_cast<float>(color[2]) / 255.0f;
+			v_pixel[y * width + x].g = static_cast<float>(color[1]) / 255.0f;
+			v_pixel[y * width + x].b = static_cast<float>(color[0]) / 255.0f;
+		}
+		file.ignore(paddingL);
+	}
+
+	file.close();
+	cout << "Zaladowano plik\n";
 }
 
