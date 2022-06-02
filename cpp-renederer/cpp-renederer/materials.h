@@ -55,6 +55,10 @@ struct Material
 //	name, vertex list, and an index list
 struct Mesh 
 {
+	Mesh()
+	{
+
+	}
 	Mesh(std::vector<Vertex>& _Vertices, std::vector<unsigned int>& _Indices) {
 		vertices = _Vertices;
 		indices = _Indices;

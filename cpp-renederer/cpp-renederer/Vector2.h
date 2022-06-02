@@ -77,3 +77,5 @@ std::ostream& operator<<(std::ostream& os, Vector2<T> const& right) {
 //Create common aliases
 using Vec2i = Vector2<int>;
 using Vec2f = Vector2<float>;
+using Vector2f = Vector2<float>;
+using Vector2i = Vector2<int>;

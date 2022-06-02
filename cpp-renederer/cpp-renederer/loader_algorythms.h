@@ -54,7 +54,7 @@ bool inTriangle(Vector3<T> p, Vector3<T> a, Vector3<T> b, Vector3<T> c)
 }
 
 // Split string into a string array at given token 
-void split(std::string& in, std::vector<std::string>& out, std::string token)
+void split(std::string in, std::vector<std::string>& out, std::string token)
 {
 	out.clear();
 
@@ -91,7 +91,7 @@ void split(std::string& in, std::vector<std::string>& out, std::string token)
 }
 
 //	Get tail of string after the token
-std::string tail(const std::string& in)
+std::string tail(const std::string &in)
 {
 	size_t token_start = in.find_first_not_of(" /t");	//	Find token
 	size_t space_start = in.find_first_of(" /t", token_start);	//	Find space after the start of token, to exclude it from next search
@@ -130,12 +130,13 @@ std::string firstToken(const std::string &in)
 }
 
 template<class T>
-const T& getElement(const std::vector<T> &elements, std::string &index)
+const T& getElement(const std::vector<T>& elements, std::string& index)
 {
 	int idx = std::static_pointer_cast(index);
 	if (idx < 0)
 		idx = int(elements.size()) + idx;
 	else
 		idx--;
-	return elements[idx]
+	return elements[idx];
 }
+
