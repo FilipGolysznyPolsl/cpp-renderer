@@ -15,7 +15,7 @@ struct Vertex
 {
 	Vec3f position;
 	Vec3f normal;
-	Vec3f textureCoordinate;
+	Vec2f textureCoordinate;
 };
 
 //	Material struct holding variables for material and mappings
