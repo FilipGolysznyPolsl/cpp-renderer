@@ -93,18 +93,18 @@ void split(std::string in, std::vector<std::string>& out, std::string token)
 //	Get tail of string after the token
 std::string tail(const std::string &in)
 {
-	size_t token_start = in.find_first_not_of(" /t");	//	Find token
-	size_t space_start = in.find_first_of(" /t", token_start);	//	Find space after the start of token, to exclude it from next search
-	size_t tail_start = in.find_first_not_of(" /t", space_start);	//	Find begining of tail
-	size_t tail_end = in.find_last_not_of(" /t");	//	Find end of tail
+	size_t tokenStart = in.find_first_not_of(" /t");	//	Find token
+	size_t spaceStart = in.find_first_of(" /t", tokenStart);	//	Find space after the start of token, to exclude it from next search
+	size_t tailStart = in.find_first_not_of(" /t", spaceStart);	//	Find begining of tail
+	size_t tailEnd = in.find_last_not_of(" /t");	//	Find end of tail
 
-	if (tail_start != std::string::npos && tail_end != std::string::npos)
+	if (tailStart != std::string::npos && tailEnd != std::string::npos)
 	{
-		return in.substr(tail_start, tail_end - tail_start + 1);
+		return in.substr(tailStart, tailEnd - tailStart + 1);
 	}
-	else if (tail_start != std::string::npos)
+	else if (tailStart != std::string::npos)
 	{
-		return in.substr(tail_start);
+		return in.substr(tailStart);
 	}
 	return "";
 }
@@ -114,16 +114,16 @@ std::string firstToken(const std::string &in)
 {
 	if (!in.empty())
 	{
-		size_t token_start = in.find_first_not_of(" \t");
-		size_t token_end = in.find_first_of(" \t", token_start);
+		size_t tokenStart = in.find_first_not_of(" \t");
+		size_t tokenEnd = in.find_first_of(" \t", tokenStart);
 		
-		if (token_start != std::string::npos && token_end != std::string::npos)
+		if (tokenStart != std::string::npos && tokenEnd != std::string::npos)
 		{
-			return in.substr(token_start, token_end - token_start);
+			return in.substr(tokenStart, tokenEnd - tokenStart);
 		}
-		else if (token_start != std::string::npos)
+		else if (tokenStart != std::string::npos)
 		{
-			return in.substr(token_start);
+			return in.substr(tokenStart);
 		}
 	}
 	return "";

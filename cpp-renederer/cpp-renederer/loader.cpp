@@ -37,7 +37,7 @@ bool Loader::loadFile(std::string path)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 
-	std::vector<std::string> meshMatNames;
+	std::vector<std::string> meshMaterialNames;
 
 	bool listening = false;
 	std::string meshName;
@@ -63,7 +63,7 @@ bool Loader::loadFile(std::string path)
 						<< "\t| texcoords > " << tCoords.size()
 						<< "\t| normals > " << normals.size()
 						<< "\t| triangles > " << (vertices.size() / 3)
-						<< (!meshMatNames.empty() ? "\t| material: " + meshMatNames.back() : "");
+						<< (!meshMaterialNames.empty() ? "\t| material: " + meshMaterialNames.back() : "");
 				}
 			}
 		#endif
@@ -290,7 +290,7 @@ bool Loader::loadFile(std::string path)
 
 //	Generate vertices from a list of positions, tcords, normals and face line
 void Loader::generateVertices(std::vector<Vertex>& oVerts, const std::vector<Vector3f>& iPositions,
-	const std::vector<Vector2f>& iTCoords, const std::vector<Vector3f>& iNormals, std::string iCurline)
+	const std::vector<Vector2f>& iTCoords, const std::vector<Vector3f>& iNormals, std::string iCurrentLine)
 {
 	std::vector<std::string> sFace, sVert;
 	Vertex vVert;
