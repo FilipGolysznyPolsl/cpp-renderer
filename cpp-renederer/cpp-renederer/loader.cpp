@@ -540,8 +540,163 @@ void Loader::vertexTriangulation(std::vector<unsigned int>& oIndices, const std:
 	}
 }
 
-//	load from .mtl file
+//	Load from .mtl file
 bool Loader::loadMaterials(std::string path)
 {
-	return false;
+	// Exit if file is not a material file
+	if (path.substr(path.size() - 4, path.size()) != ".mtl")
+		return false;
+
+	std::ifstream file(path);
+
+	//	exit if file is not found
+	if (!file.is_open())
+	{
+		return false;
+	}
+
+	Material tempMaterial;
+
+	bool listening = false;
+
+	//	Go through each line looking for material variables
+	std::string currentLine;
+	while (std::getline(file, currentLine))
+	{
+		//	New material and material name
+		if (firstToken(currentLine) == "newmtl")
+		{
+			if (!listening)
+			{
+				listening = true;
+
+				if (currentLine.size() > 7)
+				{
+					tempMaterial.name = tail(currentLine);
+				}
+				else
+				{
+					tempMaterial.name = "none";
+				}
+			}
+			else
+			{
+				loadedMaterials.push_back(tempMaterial);
+
+				//	clear loaded tempMateial
+				tempMaterial = Material();
+
+				if (currentLine.size() > 7)
+				{
+					tempMaterial.name = tail(currentLine);
+				}
+				else
+				{
+					tempMaterial.name = "none";
+				}
+			}
+		}
+		
+		//	Ambient color
+		if (firstToken(currentLine) == "Ka")
+		{
+			std::vector<std::string> temp;
+			split(tail(currentLine), temp, " ");
+
+			if (temp.size() != 3)
+				continue;
+
+			tempMaterial.ambientColor.x = std::stof(temp[0]);
+			tempMaterial.ambientColor.y = std::stof(temp[1]);
+			tempMaterial.ambientColor.z = std::stof(temp[2]);
+		}
+
+		// Diffuse color
+		if (firstToken(currentLine) == "Kd")
+		{
+			std::vector<std::string> temp;
+			split(tail(currentLine), temp, " ");
+
+			if (temp.size() != 3)
+				continue;
+
+			tempMaterial.diffuseColor.x = std::stof(temp[0]);
+			tempMaterial.diffuseColor.y = std::stof(temp[1]);
+			tempMaterial.diffuseColor.z = std::stof(temp[2]);
+		}
+
+		//	Specular color
+		if (firstToken(currentLine) == "Ks")
+		{
+			std::vector<std::string> temp;
+			split(tail(currentLine), temp, " ");
+
+			if (temp.size() != 3)
+				continue;
+
+			tempMaterial.specularColor.x = std::stof(temp[0]);
+			tempMaterial.specularColor.y = std::stof(temp[1]);
+			tempMaterial.specularColor.z = std::stof(temp[2]);
+		}
+
+		//	Specular exponent
+		if (firstToken(currentLine) == "Ns")
+		{
+			tempMaterial.specularExponent = std::stof(tail(currentLine));
+		}
+		//	Optical density
+		if (firstToken(currentLine) == "Ni")
+		{
+			tempMaterial.opticalDensity = std::stof(tail(currentLine));
+		}
+		//	dissolve
+		if (firstToken(currentLine) == "Ns")
+		{
+			tempMaterial.dissolve = std::stof(tail(currentLine));
+		}
+		//	Illumination
+		if (firstToken(currentLine) == "Ns")
+		{
+			tempMaterial.ilumination = std::stoi(tail(currentLine));
+		}
+		//	Ambient texture map
+		if (firstToken(currentLine) == "map_Ka")
+		{
+			tempMaterial.mapAmbientTexture = tail(currentLine);
+		}
+		//	diffuse texture map
+		if (firstToken(currentLine) == "map_Kd")
+		{
+			tempMaterial.mapDiffuseTexture = tail(currentLine);
+		}
+		//	specular texture map
+		if (firstToken(currentLine) == "map_Ks")
+		{
+			tempMaterial.mapSpecularTexture = tail(currentLine);
+		}
+		//	Specular highlight map
+		if (firstToken(currentLine) == "map_Ns")
+		{
+			tempMaterial.mapSpecularHighlights = tail(currentLine);
+		}
+		//	Alpha texture map
+		if (firstToken(currentLine) == "map_d")
+		{
+			tempMaterial.mapAlphaTexture = tail(currentLine);
+		}
+		//	Bump map
+		if (firstToken(currentLine) == "map_Bump" || firstToken(currentLine) == "map_bump" || firstToken(currentLine) == "bump")
+		{
+			tempMaterial.mapBump = tail(currentLine);
+		}
+	}
+
+	//	Deal with last material
+	loadedMaterials.push_back(tempMaterial);
+
+	//Test to see if anything was loaded
+	if (loadedMaterials.empty())
+		return false;
+	else
+		return true;
 }
