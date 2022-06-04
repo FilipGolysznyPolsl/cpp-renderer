@@ -44,10 +44,10 @@ bool inTriangle(Vector3<T> p, Vector3<T> a, Vector3<T> b, Vector3<T> c)
 
 	//	Get triangle's normal, and project p onto nromal
 	Vector3<T> normal = triangleNormal(a, b, c);
-	Vector3<T> projection = projection(p, normal);
+	Vector3<T> projectOntoNormal = projection(p, normal);
 
 	//	P is on the triangle if distance from p to abc is 0
-	if (magnitude(projection) == 0)
+	if (magnitude(projectOntoNormal) == 0)
 		return true;
 	else
 		return false;
@@ -132,7 +132,7 @@ std::string firstToken(const std::string &in)
 template<class T>
 const T& getElement(const std::vector<T>& elements, std::string& index)
 {
-	int idx = std::static_pointer_cast(index);
+	int idx = std::stoi(index);
 	if (idx < 0)
 		idx = int(elements.size()) + idx;
 	else

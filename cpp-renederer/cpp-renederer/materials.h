@@ -44,7 +44,7 @@ struct Material
 
 	std::string mapAmbientTexture;
 	std::string mapDiffuseTexture;
-	std::string mapSpecualrTexture;
+	std::string mapSpecularTexture;
 	std::string mapSpecularHighlights;
 	std::string mapAlphaTexture;
 	std::string mapBump;
