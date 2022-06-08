@@ -4,7 +4,7 @@ Pixel::Pixel() : r(0), g(0), b(0)
 {
 }
 
-Pixel::Pixel(float r, float g, float b) : r(r), g(g), b(b)
+Pixel::Pixel(float r, float g, float b) : r(256-r), g(256-g), b(256-b)
 {
 }
 
@@ -47,7 +47,7 @@ void Obraz::Export(const char* path)
 	// Typ pliku
 	Header[0] = 'B';
 	Header[1] = 'M';
-	// Wielkoœæ pliku
+	// WielkoÅ“Ã¦ pliku
 	Header[2] = ContentL;
 	Header[3] = ContentL >> 8;
 	Header[4] = ContentL >> 16;
@@ -57,7 +57,7 @@ void Obraz::Export(const char* path)
 	Header[7] = 0;
 	Header[8] = 0;
 	Header[9] = 0;
-	// Przesuniêcie zawartoœci o wielkoœæ nag³ówka
+	// PrzesuniÃªcie zawartoÅ“ci o wielkoÅ“Ã¦ nagÂ³Ã³wka
 	Header[10] = HeaderL + InfHeadL;
 	Header[11] = 0;
 	Header[12] = 0;
@@ -66,22 +66,22 @@ void Obraz::Export(const char* path)
 
 	unsigned char InfHead[InfHeadL];
 
-	// Wielkoœæ nag³ówka
+	// WielkoÅ“Ã¦ nagÂ³Ã³wka
 	InfHead[0] = InfHeadL;
 	InfHead[1] = 0;
 	InfHead[2] = 0;
 	InfHead[3] = 0;
-	// Szerokoœæ obrazu
+	// SzerokoÅ“Ã¦ obrazu
 	InfHead[4] = width;
 	InfHead[5] = width >> 8;
 	InfHead[6] = width >> 16;
 	InfHead[7] = width >> 24;
-	// Wysokoœæ obrazu
+	// WysokoÅ“Ã¦ obrazu
 	InfHead[8] = height;
 	InfHead[9] = height  >> 8;
 	InfHead[10] = height >> 16;
 	InfHead[11] = height >> 24;
-	// Iloœæ warstw
+	// IloÅ“Ã¦ warstw
 	InfHead[12] = 1;
 	InfHead[13] = 0;
 	// Rozmiar piksela w bitach
@@ -94,7 +94,7 @@ void Obraz::Export(const char* path)
 	InfHead[17] = 0;
 	InfHead[18] = 0;
 	InfHead[19] = 0;
-	// Wielkoœæ obrazu (do kompresji)
+	// WielkoÅ“Ã¦ obrazu (do kompresji)
 	InfHead[20] = 0;
 	InfHead[21] = 0;
 	InfHead[22] = 0;
@@ -109,12 +109,12 @@ void Obraz::Export(const char* path)
 	InfHead[29] = 0;
 	InfHead[30] = 0;
 	InfHead[31] = 0;
-	// Palety kolorów
+	// Palety kolorÃ³w
 	InfHead[32] = 0;
 	InfHead[33] = 0;
 	InfHead[34] = 0;
 	InfHead[35] = 0;
-	// Wa¿ne kolory
+	// WaÂ¿ne kolory
 	InfHead[36] = 0;
 	InfHead[37] = 0;
 	InfHead[38] = 0;
