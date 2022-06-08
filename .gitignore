@@ -5,6 +5,7 @@
 ### VS leftover files ###
 *.sln
 *.vcxproj
+*.vcxproj.filters
 
 ### output files ###
 *.bmp
