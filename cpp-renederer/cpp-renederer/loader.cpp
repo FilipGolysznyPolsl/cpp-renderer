@@ -5,16 +5,16 @@
 
 #define LOADER_CONSOLE_OUTPUT
 
-Loader::Loader() {
+Model::Model() {
 
 }
 
-Loader::~Loader()
+Model::~Model()
 {
 	loadedMeshes.clear();
 }
 
-bool Loader::loadFile(std::string path)
+bool Model::loadFile(std::string path)
 {
 	//	Return false if file is not an .obj file
 	if (path.substr(path.size() - 4, 4) != ".obj")
@@ -289,7 +289,7 @@ bool Loader::loadFile(std::string path)
 }
 
 //	Generate vertices from a list of positions, tcords, normals and face line
-void Loader::generateVertices(std::vector<Vertex>& oVerts, const std::vector<Vector3f>& iPositions,
+void Model::generateVertices(std::vector<Vertex>& oVerts, const std::vector<Vector3f>& iPositions,
 	const std::vector<Vector2f>& iTCoords, const std::vector<Vector3f>& iNormals, std::string iCurrentLine)
 {
 	std::vector<std::string> sFace, sVert;
@@ -380,7 +380,7 @@ void Loader::generateVertices(std::vector<Vertex>& oVerts, const std::vector<Vec
 }
 
 //	Triangulate a list of vertices into a face
-void Loader::vertexTriangulation(std::vector<unsigned int>& oIndices, const std::vector<Vertex>& iVerts)
+void Model::vertexTriangulation(std::vector<unsigned int>& oIndices, const std::vector<Vertex>& iVerts)
 {
 	//	if less than 3 verts - can'r create triangle - exit
 	if (iVerts.size() < 3)
@@ -541,7 +541,7 @@ void Loader::vertexTriangulation(std::vector<unsigned int>& oIndices, const std:
 }
 
 //	Load from .mtl file
-bool Loader::loadMaterials(std::string path)
+bool Model::loadMaterials(std::string path)
 {
 	// Exit if file is not a material file
 	if (path.substr(path.size() - 4, path.size()) != ".mtl")

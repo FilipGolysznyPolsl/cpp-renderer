@@ -39,7 +39,7 @@ int main()
 	}
 	
 	// Wyrzucam zmieniony bmp do pliku
-	bmp.Export("test.bmp");
+	bmp.Export("../test1.bmp");
 
 	// Tworze dodatkowy Obraz o nazwie kopia i dowolnej wielkości
 	Obraz kopia(200,200);

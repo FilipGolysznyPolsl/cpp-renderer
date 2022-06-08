@@ -8,10 +8,10 @@
 #include"materials.h"
 
 // The .obj model loader
-class Loader {
+class Model {
 public:
-	Loader();
-	~Loader();
+	Model();
+	~Model();
 	bool loadFile(std::string path);
 
 	std::vector<Mesh> loadedMeshes;
