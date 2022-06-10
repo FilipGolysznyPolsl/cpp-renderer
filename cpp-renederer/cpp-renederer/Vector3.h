@@ -58,6 +58,13 @@ Vector3<T> projection(const Vector3<T> a, const Vector3<T> b)
 	Vector3<T> bn = b / magnitude(b);
 	return bn * dot(a, bn);
 }
+// normalization of vector - unit vector in original vector's direction
+template<typename T>
+Vector3<T> normalize(const Vector3<T> v) 
+{
+	T len = magnitude(v);
+	return Vector3<T>(v.x / len, v.y / len, v.z / len);
+}
 
 
 
