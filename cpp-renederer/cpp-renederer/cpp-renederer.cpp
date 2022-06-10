@@ -1,17 +1,34 @@
 ﻿#include <iostream>
 #include<limits>
+#include <map>
 #include"vector2.h"
 #include"vector3.h"
 #include"obraz.h"
+#include"loader.h"
 
 
-const int WIDTH = 400;
-const int HEIGHT = 400;
+const int WIDTH = 800;
+const int HEIGHT = 800;
+// Create image object
+Obraz image(WIDTH, HEIGHT);
 
-Pixel red(255, 0 , 0);
-Pixel white(255, 255, 255);
-Pixel green(0, 255, 0);
+std::map<std::string, Pixel> my_map = {
+    
+};
+Pixel colors[] = {
+    Pixel(255, 0 , 0),
+    Pixel(255, 255, 255),
+    Pixel(0, 255, 0),
+    Pixel(200, 155, 255),
+    Pixel(10, 255, 110),
+    Pixel(0,0,255),
+    Pixel(50, 255, 70),
+    Pixel(200, 110, 255),
+    Pixel(10, 230, 150),
+};
 
+
+//  Calculate barycentric coordinates for given point P in triangle (pts[0],pts[1],pts[2])
 Vec3f barycentric (Vec3f P, Vec3f* pts) {
     Vec3f u = cross(Vec3f(pts[2].x - pts[0].x, pts[1].x - pts[0].x, pts[0].x - P.x), Vec3f(pts[2].y - pts[0].y, pts[1].y - pts[0].y, pts[0].y - P.y));
 
@@ -21,6 +38,8 @@ Vec3f barycentric (Vec3f P, Vec3f* pts) {
     return Vec3f(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
 }
 
+
+// Check if point P is inside triangle having vertices in pts array using barycentric coordinates
 bool inside(Vec3f P, Vec3f* pts) {
     Vec3f z = barycentric(P, pts);
 
@@ -32,6 +51,7 @@ bool inside(Vec3f P, Vec3f* pts) {
     }
 }
 
+//  Draw triangle between points in pts array, on given image in given color
 void triangle(Vec3f* pts, Obraz& image, Pixel& color) {
     Vec2f boundaryMin(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     Vec2f boundaryMax(std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
@@ -57,24 +77,109 @@ void triangle(Vec3f* pts, Obraz& image, Pixel& color) {
     }
 }
 
-int main()
-{
-	// Create image object
-	Obraz image(WIDTH, HEIGHT);
-       
-    Vec3f a(200, 200, 200);
-    Vec3f b(150, 150, 150);
-    Vec3f c(15, 150, 30);
+int main(int argc, char** argv) {
+    Model model;
+    bool loaded = false;
+    if (2 == argc) {
+        loaded = model.loadFile(argv[1]);
+    }
+    else {
+        loaded = model.loadFile("obj/african_head.obj");
+        //loaded = model.loadFile("obj/box_stack.obj");
+    }
+    if (!loaded) return 1;
 
-    Vec3f pts[3] = { a,b,c };
-    
-    triangle(pts, image, red);
-    
-    /*image.SetKolor(white, a.x, a.y);
-    image.SetKolor(white, b.x, b.y);
-    image.SetKolor(white, c.x, c.y);*/
+    Vec3f lightDirection(0, 0, -1);
+
+    for (int h=0; h < model.loadedMeshes.size(); h++) {
+        Mesh currentMesh = model.loadedMeshes[h];
+        for (int i = 2; i < currentMesh.vertices.size(); i += 3)
+        {
+            Vec3f worldCoords[3] = { model.loadedVertices[i].position, model.loadedVertices[i - 1].position, model.loadedVertices[i - 2].position };
+            Vec3f screenCoords[3];
+            for (int j = 0; j < 3; j++) {
+                screenCoords[j] = Vec3f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f, (worldCoords[j].z + 1.f));
+            }
+
+            Vec3f n = (cross(worldCoords[2] - worldCoords[0], worldCoords[1] - worldCoords[0]));
+            normalize(n);
+            float lightIntensity = dot(n,lightDirection);
+            float l = lightIntensity * 255;
+            Pixel grey(l, l, l);
+            if (lightIntensity > 0) {
+                triangle(screenCoords, image, grey);
+            }
+        }
+    }
+
+    // Go through each loaded mesh and out its contents
+    //for (int i = 0; i < model.loadedMeshes.size(); i++)
+    //{
+    //    // Copy one of the loaded meshes to be our current mesh
+    //    Mesh curMesh = model.loadedMeshes[i];
+
+    //    // Print Mesh Name
+    //    std::cout << "Mesh " << i << ": " << curMesh.name << "\n";
+
+    //    // Print Vertices
+    //    std::cout << "Vertices:\n";
+
+    //    // Go through each vertex and print its number,
+    //    //  position, normal, and texture coordinate
+    //    /*for (int j = 0; j < curMesh.vertices.size(); j++)
+    //    {
+    //        std::cout << "V" << j << ": " <<
+    //            "P(" << curMesh.vertices[j].position.x << ", " << curMesh.vertices[j].position.y << ", " << curMesh.vertices[j].position.z << ") " <<
+    //            "N(" << curMesh.vertices[j].normal.x << ", " << curMesh.vertices[j].normal.y << ", " << curMesh.vertices[j].normal.z << ") " <<
+    //            "TC(" << curMesh.vertices[j].textureCoordinate.x << ", " << curMesh.vertices[j].textureCoordinate.y << ")\n";
+    //    }*/
+
+    //    // Print Indices
+    //    std:cout << "Indices:\n";
+
+    //    // Go through every 3rd index and print the
+    //    //	triangle that these indices represent
+    //    for (int j = 0; j+4 <= curMesh.indices.size(); j += 6)
+    //    {
+    //        //std::cout << "T" << j / 3 << ": " << curMesh.indices[j] << ", " << curMesh.indices[j + 1] << ", " << curMesh.indices[j + 2] << "\n"; 
+    //        int i1 = curMesh.indices[j];
+    //        int i2 = curMesh.indices[j+2];
+    //        int i3 = curMesh.indices[j + 4];
+    //        std::cout << i1 << " | " << curMesh.vertices[i1].position << "     ";
+    //        std::cout << i2 << " | " << curMesh.vertices[i2].position << "     ";
+    //        std::cout << i3 << " | " << curMesh.vertices[i3].position << "\n";
+    //        Vec3f worldCoords[] = { curMesh.vertices[i1].position, curMesh.vertices[i2].position, curMesh.vertices[i3].position };
+    //        
+    //        Vec3f screenCoords[3];
+    //        for (int j = 0; j < 3; j++) {
+    //            screenCoords[j] = Vec3f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f, (worldCoords[j].z + 1.f));
+    //        }
+
+    //        srand(j);
+    //        int index = rand() % 3;
+    //        triangle(screenCoords, image, colors[index]);
+    //    }
+
+    //    // Print Material
+    //    /*file << "Material: " << curMesh.MeshMaterial.name << "\n";
+    //    file << "Ambient Color: " << curMesh.MeshMaterial.Ka.X << ", " << curMesh.MeshMaterial.Ka.Y << ", " << curMesh.MeshMaterial.Ka.Z << "\n";
+    //    file << "Diffuse Color: " << curMesh.MeshMaterial.Kd.X << ", " << curMesh.MeshMaterial.Kd.Y << ", " << curMesh.MeshMaterial.Kd.Z << "\n";
+    //    file << "Specular Color: " << curMesh.MeshMaterial.Ks.X << ", " << curMesh.MeshMaterial.Ks.Y << ", " << curMesh.MeshMaterial.Ks.Z << "\n";
+    //    file << "Specular Exponent: " << curMesh.MeshMaterial.Ns << "\n";
+    //    file << "Optical Density: " << curMesh.MeshMaterial.Ni << "\n";
+    //    file << "Dissolve: " << curMesh.MeshMaterial.d << "\n";
+    //    file << "Illumination: " << curMesh.MeshMaterial.illum << "\n";
+    //    file << "Ambient Texture Map: " << curMesh.MeshMaterial.map_Ka << "\n";
+    //    file << "Diffuse Texture Map: " << curMesh.MeshMaterial.map_Kd << "\n";
+    //    file << "Specular Texture Map: " << curMesh.MeshMaterial.map_Ks << "\n";
+    //    file << "Alpha Texture Map: " << curMesh.MeshMaterial.map_d << "\n";
+    //    file << "Bump Map: " << curMesh.MeshMaterial.map_bump << "\n";*/
+
+    //    // Leave a space to separate from the next mesh
+    //    std::cout << "\n";
+    //}
 
 	// Export created bmp file
-	image.Export("../test1.bmp");
+	image.Export("../test3.bmp");
     return 0;
 }

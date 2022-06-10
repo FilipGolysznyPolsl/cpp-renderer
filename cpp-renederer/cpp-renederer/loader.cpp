@@ -5,9 +5,7 @@
 
 #define LOADER_CONSOLE_OUTPUT
 
-Model::Model() {
-
-}
+Model::Model() {}
 
 Model::~Model()
 {
@@ -175,7 +173,7 @@ bool Model::loadFile(std::string path)
 
 			std::vector<unsigned int> iIndices;
 
-			vertexTriangulation(iIndices, vVerts);
+			vertexTriangulation(iIndices, vVerts); 
 
 			for (int i = 0; i<int(iIndices.size()); i++)
 			{
