@@ -7,25 +7,11 @@
 #include"loader.h"
 
 
-const int WIDTH = 800;
-const int HEIGHT = 800;
+const int WIDTH = 1000;
+const int HEIGHT = 1000;
 // Create image object
 Obraz image(WIDTH, HEIGHT);
 
-std::map<std::string, Pixel> my_map = {
-    
-};
-Pixel colors[] = {
-    Pixel(255, 0 , 0),
-    Pixel(255, 255, 255),
-    Pixel(0, 255, 0),
-    Pixel(200, 155, 255),
-    Pixel(10, 255, 110),
-    Pixel(0,0,255),
-    Pixel(50, 255, 70),
-    Pixel(200, 110, 255),
-    Pixel(10, 230, 150),
-};
 
 
 //  Calculate barycentric coordinates for given point P in triangle (pts[0],pts[1],pts[2])
@@ -69,10 +55,9 @@ void triangle(Vec3f* pts, Obraz& image, Pixel& color) {
     //Iterate over pixels inside the boundaries and run function to check id they're inside triangle
     for (P.x = boundaryMin.x; P.x < boundaryMax.x; P.x++) {
         for (P.y = boundaryMin.y; P.y < boundaryMax.y; P.y++) {
-            if (!inside(P, pts)) {
-                continue;
+            if (inside(P, pts)) {
+                image.SetKolor(color, P.x, P.y);
             }
-            image.SetKolor(color, P.x, P.y);
         }
     }
 }
@@ -91,7 +76,7 @@ int main(int argc, char** argv) {
 
     Vec3f lightDirection(0, 0, -1);
 
-    for (int h=0; h < model.loadedMeshes.size(); h++) {
+    /*for (int h=0; h < model.loadedMeshes.size(); h++) {
         Mesh currentMesh = model.loadedMeshes[h];
         for (int i = 2; i < currentMesh.vertices.size(); i += 3)
         {
@@ -109,6 +94,49 @@ int main(int argc, char** argv) {
             if (lightIntensity > 0) {
                 triangle(screenCoords, image, grey);
             }
+        }
+    }*/
+
+    // Go through each loaded mesh and out its contents
+    for (int i = 0; i < model.loadedMeshes.size(); i++)
+    {
+        // Copy one of the loaded meshes to be our current mesh
+        Mesh curMesh = model.loadedMeshes[i];
+
+        // Go through every 3rd index and print the
+        //	triangle that these indices represent
+        for (int j = 0; j + 4 <= curMesh.indices.size(); j += 6)
+        {
+            int i1 = curMesh.indices[j];
+            int i2 = curMesh.indices[j + 2];
+            int i3 = curMesh.indices[j + 4];
+            //std::cout << i1 << " | " << curMesh.vertices[i1].position << "     ";
+            //std::cout << i2 << " | " << curMesh.vertices[i2].position << "     ";
+            //std::cout << i3 << " | " << curMesh.vertices[i3].position << "\n";
+            Vec3f worldCoords[] = { curMesh.vertices[i1].position, curMesh.vertices[i2].position, curMesh.vertices[i3].position };
+
+            Vec3f screenCoords[3];
+            // Translate world coords provided in obj to screen cords on image
+            for (int j = 0; j < 3; j++) {
+                screenCoords[j] = Vec3f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f, (worldCoords[j].z + 1.f));
+            }
+
+            //  Calculate light intensity
+            Vec3f n = (cross(worldCoords[2] - worldCoords[0], worldCoords[1] - worldCoords[0]));
+            normalize(n);
+            float lightIntensity = dot(n, lightDirection);
+
+            float l = lightIntensity * 255;
+
+            Pixel grey(l, l, l);
+            // Print triangle if it's lit
+            if (lightIntensity > 0) {
+                triangle(screenCoords, image, grey);
+            }
+
+            //        srand(j);
+            //        int index = rand() % 3;
+            //        triangle(screenCoords, image, colors[index]);
         }
     }
 
@@ -154,11 +182,19 @@ int main(int argc, char** argv) {
     //        for (int j = 0; j < 3; j++) {
     //            screenCoords[j] = Vec3f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f, (worldCoords[j].z + 1.f));
     //        }
+    //        Vec3f n = (cross(worldCoords[2] - worldCoords[0], worldCoords[1] - worldCoords[0]));
+    //        normalize(n);
+    //        float lightIntensity = dot(n, lightDirection);
+    //        float l = lightIntensity * 255;
+    //        Pixel grey(l, l, l);
+    //        if (lightIntensity > 0) {
+    //            triangle(screenCoords, image, grey);
+    //        }
 
     //        srand(j);
     //        int index = rand() % 3;
     //        triangle(screenCoords, image, colors[index]);
-    //    }
+        //}
 
     //    // Print Material
     //    /*file << "Material: " << curMesh.MeshMaterial.name << "\n";
