@@ -12,7 +12,12 @@ const int HEIGHT = 1000;
 // Create image object
 Obraz image(WIDTH, HEIGHT);
 
-
+// Calculate edge function - calculate position of point P to vector ab
+inline
+float edgeFunction(const Vec3f &a, const Vec3f &b, const Vec3f &P)
+{
+    return (P.x - a.x) * (b.y - a.y) - (P.y - a.y) * (b.x - a.x);
+}
 
 //  Calculate barycentric coordinates for given point P in triangle (pts[0],pts[1],pts[2])
 Vec3f barycentric (Vec3f P, Vec3f* pts) {
@@ -27,9 +32,13 @@ Vec3f barycentric (Vec3f P, Vec3f* pts) {
 
 // Check if point P is inside triangle having vertices in pts array using barycentric coordinates
 bool inside(Vec3f P, Vec3f* pts) {
-    Vec3f z = barycentric(P, pts);
+    // assign weights from edge functions
+    Vec3f w;
+    w.x = edgeFunction(pts[2], pts[1], P);
+    w.y = edgeFunction(pts[1], pts[0], P);
+    w.z = edgeFunction(pts[0], pts[2], P);
 
-    if (z.x < 0 || z.y < 0 || z.z < 0) {
+    if (w.x < 0 || w.y < 0 || w.z < 0) {
         return false;
     }
     else {
