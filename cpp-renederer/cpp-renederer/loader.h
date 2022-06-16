@@ -13,6 +13,8 @@ public:
 	Model();
 	~Model();
 	bool loadFile(std::string path);
+	float canvasWidth=0;
+	float canvasHeight=0;
 
 	std::vector<Mesh> loadedMeshes;
 	std::vector<Vertex> loadedVertices;

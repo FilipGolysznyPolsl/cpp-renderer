@@ -181,7 +181,7 @@ bool Model::loadFile(std::string path)
 				indices.push_back(indexNumber);
 
 				indexNumber = (unsigned int)((loadedVertices.size()) - vVerts.size()) + iIndices[i];
-				indices.push_back(indexNumber);
+				loadedIndices.push_back(indexNumber);
 			}
 		}
 
@@ -275,6 +275,15 @@ bool Model::loadFile(std::string path)
 			}
 		}
 	}
+
+	canvasWidth = 0;
+	canvasHeight = 0;
+	for (Vertex &v : loadedVertices) {
+		if (std::abs(v.position.x) > canvasWidth) canvasWidth = std::abs(v.position.x);
+		if (std::abs(v.position.y) > canvasHeight) canvasHeight = std::abs(v.position.y);
+	}
+	canvasWidth = ceil(canvasWidth);
+	canvasHeight = ceil(canvasHeight);
 
 	if (loadedMeshes.empty() && loadedVertices.empty() && loadedIndices.empty())
 	{

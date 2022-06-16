@@ -15,11 +15,6 @@ public:
 		y = 0;
 		z = 0;
 	}
-	Vector3(T a) {
-		x = a;
-		y = a;
-		z = a;
-	}
 	Vector3(T a, T b, T c)
 	{
 		x = a;
