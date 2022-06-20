@@ -31,42 +31,13 @@ Vec2f convertCoords(Vec3f P) {
 }
 
 int main(int argc, char** argv) {
-    bool loaded = false;
-    if (2 == argc) {
-        loaded = model.loadFile(argv[1]);
+
+    //  Load model from file and check if loaded correctly
+    if (!model.loadFile("obj/african_head.obj")) {
+        return 1;
     }
-    else {
-        //loaded = model.loadFile("obj/african_head.obj");
-        //loaded = model.loadFile("obj/deer.obj");
-        //loaded = model.loadFile("obj/box_stack.obj");
-        loaded = model.loadFile("obj/man.obj");
-    }
-    if (!loaded) return 1;
 
     Vec3f lightDirection(0, 0, -1);
-
-    /*for (int h=0; h < model.loadedMeshes.size(); h++) {
-        Mesh currentMesh = model.loadedMeshes[h];
-        for (int i = 2; i < currentMesh.vertices.size(); i += 3)
-        {
-            Vec3f worldCoords[3] = { model.loadedVertices[i].position, model.loadedVertices[i - 1].position, model.loadedVertices[i - 2].position };
-            Vec3f screenCoords[3];
-            for (int j = 0; j < 3; j++) {
-                screenCoords[j] = Vec3f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f, (worldCoords[j].z + 1.f));
-            }
-
-            Vec3f n = (cross(worldCoords[2] - worldCoords[0], worldCoords[1] - worldCoords[0]));
-            normalize(n);
-            float lightIntensity = dot(n,lightDirection);
-            float l = lightIntensity * 255;
-            Pixel grey(l, l, l);
-            if (lightIntensity > 0) {
-                triangle(screenCoords, image, grey);
-            }
-        }
-    }*/
-
-
 
     // Go through each loaded mesh and out its contents
     for (int i = 0; i < model.loadedMeshes.size(); i++)
@@ -95,14 +66,14 @@ int main(int argc, char** argv) {
 
             Vec2f screenCoords[3];
             for (int j = 0; j < 3; j++) {
-                screenCoords[j] = convertCoords(worldCoords[j]);
-                //screenCoords[j] = screenCoords[j] = Vec2f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f);
+                //screenCoords[j] = convertCoords(worldCoords[j]);
+                screenCoords[j] = screenCoords[j] = Vec2f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f);
             }
 
             //  Calculate light intensity
             Vec3f n = (cross(worldCoords[2] - worldCoords[0], worldCoords[1] - worldCoords[0]));
-            normalize(n);
             float lightIntensity = dot(n, lightDirection);
+            normalize(n);
 
             float l = lightIntensity * 255;
 
@@ -111,14 +82,10 @@ int main(int argc, char** argv) {
             if (lightIntensity > 0) {
                 triangle(screenCoords, image, grey, verts);
             }
-
-            //        srand(j);
-            //        int index = rand() % 3;
-            //        triangle(screenCoords, image, colors[index]);
         }
     }
 
 	// Export created bmp file
-	image.Export("../deer1.bmp");
+	image.Export("../head2.bmp");
     return 0;
 }
