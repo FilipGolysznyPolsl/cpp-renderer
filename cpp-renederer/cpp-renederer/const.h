@@ -8,3 +8,5 @@ const int HEIGHT = 1000;
 Obraz image(WIDTH, HEIGHT);
 // Global model object
 Model model;
+// light direction vector
+Vec3f lightDirection(0, 0, -1);

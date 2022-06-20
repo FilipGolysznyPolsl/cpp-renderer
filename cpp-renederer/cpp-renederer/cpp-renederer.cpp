@@ -37,7 +37,6 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    Vec3f lightDirection(0, 0, -1);
 
     // Go through each loaded mesh and out its contents
     for (int i = 0; i < model.loadedMeshes.size(); i++)
@@ -67,7 +66,6 @@ int main(int argc, char** argv) {
             Vec2f screenCoords[3];
             for (int j = 0; j < 3; j++) {
                 //screenCoords[j] = convertCoords(worldCoords[j]);
-                screenCoords[j] = screenCoords[j] = Vec2f((worldCoords[j].x + 1.) * WIDTH / 2.f, (worldCoords[j].y + 1.) * HEIGHT / 2.f);
             }
 
             //  Calculate light intensity
