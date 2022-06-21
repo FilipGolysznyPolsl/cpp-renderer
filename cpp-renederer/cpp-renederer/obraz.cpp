@@ -4,8 +4,26 @@ Pixel::Pixel() : r(0), g(0), b(0)
 {
 }
 
-Pixel::Pixel(float r, float g, float b) : r(256-r), g(256-g), b(256-b)
+Pixel::Pixel(float r1, float g1, float b1)
 {
+	if (r1 == 0) {
+		r = 0;
+	}
+	else {
+		r = 256 - r1;
+	}
+	if (g1 == 0) {
+		g = 0;
+	}
+	else {
+		g = 256 - g1;
+	}
+	if (b1 == 0) {
+		b = 0;
+	}
+	else {
+		b = 256 - b1;
+	}
 }
 
 Pixel::~Pixel()
