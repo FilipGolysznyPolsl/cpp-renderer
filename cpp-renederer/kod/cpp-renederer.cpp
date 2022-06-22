@@ -1,4 +1,6 @@
 ﻿#include <iostream>
+#include<limits>
+#include <map>
 #include"vector2.h"
 #include"vector3.h"
 #include"obraz.h"
@@ -6,6 +8,22 @@
 #include"triangle.h"
 #include"const.h"
 
+
+Vec2f convertCoords(Vec3f P) {
+    Vec2f pScreen;
+    Vec2f pNDC;
+    Vec2f pRaster;
+
+    pScreen.x = P.x / -P.z;
+    pScreen.y = P.y / -P.z;
+    //pNDC.x = (pScreen.x + model.canvasWidth * 0.5) / model.canvasWidth;
+    pNDC.x = (pScreen.x + WIDTH * 0.5) / WIDTH;
+    //pNDC.y = (pScreen.y + model.canvasHeight * 0.5) / model.canvasHeight;
+    pNDC.y = (pScreen.y + HEIGHT * 0.5) / HEIGHT;
+    pRaster.x = pNDC.x * WIDTH;
+    pRaster.y = pNDC.y * HEIGHT;
+    return pRaster;
+}
 
 int main(int argc, char** argv) {
 
